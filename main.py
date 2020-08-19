@@ -1,11 +1,10 @@
 from app.wsgiapp import Application 
-from view import IndexView, Other, contact_view, Contact
+from view import IndexView, Other,  Contact
 
 urlpatterns = {
     '/': IndexView(),
     '/other/': Other(),
-    '/contact/': contact_view,
-    # '/contact/': Contact()
+    '/contact/': Contact()
 }
 
 
@@ -19,5 +18,3 @@ front_controllers = [
 
 application = Application(urlpatterns, front_controllers)
 
-# Запуск:
-# gunicorn main:application

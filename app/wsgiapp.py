@@ -28,8 +28,6 @@ class Application:
             start_response('404 NOT FOUND', [('Content-Type', 'text/html')])
             return [b"Not Found"]
 
-    
-
     def parse_input_data(self, data: str):
         result = {}
         if data:
@@ -45,7 +43,6 @@ class Application:
         data = environ['wsgi.input'].read(content_length) if content_length > 0 else b''
         return data
 
-
     def parse_wsgi_input_data(self, data: bytes):
         result = {}
         if data:
@@ -53,5 +50,13 @@ class Application:
             result = self.parse_input_data(data_str)
         return result
 
+    def add_route(self, url):
+        def inner(view):
+            self.urlpatterns[url] = view
+
+        return inner
+
+
+    
 
 

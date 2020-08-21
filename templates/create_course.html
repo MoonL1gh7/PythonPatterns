@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Create course{% endblock %}
+{% block main %}
+<h1>Create course</h1>
+<form method="post">
+    <input type="text" name="name" placeholder="Name">
+    <select size="3" name="category_id">
+        {% for item in categories %}
+        <option value="{{item.id}}">{{item.name}}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

@@ -1,4 +1,4 @@
-from app.wsgiapp import Application 
+from app.wsgiapp import Application, FakeApplication, DebugApplication
 from app.template import render
 from app.controller import front_controllers
 from app.log import Logger
@@ -12,7 +12,7 @@ LOGGER = Logger('main')
 
 class IndexView:
     def __call__(self, request):
-        LOGGER.log('IndexView')
+        LOGGER.log('CoursesList')
         secret = request.get('secret_key', None)
         print(secret)
         return '200 OK', render('index.html', objects_list=site.courses)
@@ -69,16 +69,9 @@ class Contact:
             return '200 OK', render('contact.html')
 
 
-# @application.add_route('/category-list/')
-# class CategoriesList:
-#     def __call__(self, request):
-#         LOGGER.log('CategoriesList')
-#         return '200 OK', render('category_list.html', objects_list=site.categories)
-
 
 urlpatterns = {
     '/': IndexView(),
-    # '/category_list/': CategoriesList(),
     '/create_category/': CreateCategory(),
     '/create_course/': CreateCourse(),
     '/contact/': Contact()
@@ -86,8 +79,11 @@ urlpatterns = {
 
 
 application = Application(urlpatterns, front_controllers)
+# application = FakeApplication(urlpatterns, front_controllers)
+# application = DebugApplication(urlpatterns, front_controllers)
+
 
 @application.add_route('/category_list/')
 def category_list(request):
-    LOGGER.log('Список категорий')
+    LOGGER.log('CategoriesList')
     return '200 OK', render('category_list.html', objects_list=site.categories)

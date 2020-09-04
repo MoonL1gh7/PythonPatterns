@@ -1,8 +1,10 @@
 from patterns.prototypes import PrototypeMixin
+from patterns.observer import Subject, Observer
 
 
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class Teacher(User):
@@ -10,7 +12,9 @@ class Teacher(User):
 
 
 class Student(User):
-    pass
+    def __init__(self, name):
+        self.courses = []
+        super().__init__(name)
 
 
 class UserFactory:
@@ -20,8 +24,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
 class Category:
@@ -41,12 +45,22 @@ class Category:
         return result
 
 
-class Course(PrototypeMixin):
+class Course(PrototypeMixin, Subject):
 
     def __init__(self, name, category):
         self.name = name
         self.category = category
-        self.category.courses.append(self)
+        self.category.course.append(self)
+        self.students = []
+        super().__init__()
+
+    def __getitem__(self, item):
+        return self.students[item]
+
+    def add_student(self, student: Student):
+        self.students.append(student)
+        student.course.append(self)
+        self.notify()
 
 
 class InteractiveCourse(Course):
@@ -75,8 +89,9 @@ class SiteModel:
         self.courses = []
         self.categories = []
 
-    def create_user(self, type_):
-        return UserFactory.create(type_)
+    def create_user(self, type_, name):
+        return UserFactory.create(type_, name)
+
 
     def create_category(self, name, category=None):
         return Category(name, category)
@@ -102,4 +117,8 @@ class SiteModel:
         for item in self.courses:
             if item.name == name:
                 return item
-        return None
+
+    def get_student(self, name) -> Student:
+        for item in self.students:
+            if item.name == name:
+                return item

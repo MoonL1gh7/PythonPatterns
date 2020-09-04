@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Categories list{% endblock %}
+{% block main %}
+<h1>Categories list</h1>
+<ul>
+    {% for item in objects_list %}
+    <li>
+        {{item.name}} <span>Categories count: {{item.course_count()}}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -51,9 +51,9 @@ class Application:
         return result
 
     def add_route(self, url):
-        def inner(view):
-            self.urlpatterns[url] = view
-
+        def inner(cls):
+            self.urlpatterns[url] = cls()
+            return cls
         return inner
 
 
